@@ -9,7 +9,6 @@ BOOKS = [
     {"title": 'Title Four', 'author':'Author Four', 'category':'math'},
     {"title": 'Title Five', 'author':'Author Five', 'category':'Religion'},
 ]
-
 @app.get("/books")
 async def read_all_books():
     return BOOKS
