@@ -60,7 +60,6 @@ async def delete_book(book_title:str):
 """
 Get all books from a specific author using path or query parameters
 """
-
 @app.get("/books/byauthor/{author}/")
 async def read_books_by_auhtor_path(author: str):
     book_to_return = []
