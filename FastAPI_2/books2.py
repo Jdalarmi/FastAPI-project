@@ -25,7 +25,6 @@ class BookRequest(BaseModel):
     description: str
     rating: int
 
-
 BOOKS = [
     Book(1, 'Computer Science', 'codwithroby', "A very nice book", 5),
     Book(2, 'Be Fast With fastapi', 'codwithroby', "A great book", 2),
