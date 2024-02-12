@@ -24,13 +24,13 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl='/auth/token')
 class CreateUserRequest(BaseModel):
     username: str
     email:str
-    firts_name: str
+    first_name: str
     last_name: str
     password: str
     role: str
 
 class Token(BaseModel):
-    acess_token: str
+    access_token: str
     token_type: str
 
 def get_db():
@@ -50,7 +50,7 @@ def authenticate_user(username:str, password:str, db):
         return False
     return user
 
-def create_acess_token(username:str, user_id:int, expires_delta:timedelta):
+def create_access_token(username:str, user_id:int, expires_delta:timedelta):
 
     encode = {'sub': username, 'id':user_id}
     expire = datetime.utcnow() + expires_delta
@@ -69,7 +69,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         return {'username': username, 'id':user_id}
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail="Could not validate user.")
+                                detail="Could not validate user JWT.")
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -78,7 +78,7 @@ async def create_user(db: db_dependency,
     create_user_model = Users(
         email=create_user_request.email,
         username=create_user_request.username,
-        first_name=create_user_request.firts_name,
+        first_name=create_user_request.first_name,
         last_name=create_user_request.last_name,
         role=create_user_request.role,
         password=bcrypt_context.hash(create_user_request.password),
@@ -89,11 +89,11 @@ async def create_user(db: db_dependency,
     db.commit()
 
 @router.post("/token", response_model=Token)
-async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                 db: db_dependency):
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail="Could not validate user.")
-    token = create_acess_token(user.username, user.id, timedelta(minutes=20))
-    return {'acess_token':token, 'token_type':'Bearer'}
+    token = create_access_token(user.username, user.id, timedelta(minutes=20))
+    return {'access_token':token, 'token_type':'Bearer'}
