@@ -58,6 +58,7 @@ def test_todo():
 client = TestClient(app)
 
 def test_read_all_authenticated(test_todo):
+    """test for read all todo with user is athenticated"""
     response = client.get("/todos/")
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == [{'complete': False, 'title': 'Learn to code!',
