@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, Request
 from pydantic import BaseModel, Field
 from ..models import Todos
 from ..database import SessionLocal
@@ -8,6 +8,11 @@ from ..models import Todos
 from typing import Annotated
 from starlette import status
 from .auth import get_current_user
+
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="Todoapp/templates")
 
 
 router = APIRouter(
@@ -30,6 +35,11 @@ class TodoRequest(BaseModel):
     description:str = Field(min_length=3, max_length=100)
     priority: int = Field(gt=0)
     complete: bool
+
+"""Create a interface with using Html file templates"""
+@router.get("/test")
+async def test(request: Request):
+    return templates.TemplateResponse("home.html", {"request":request})
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
