@@ -10,7 +10,7 @@ from ..models import Todos
 
 SQLALCHEMY_DATEBASE_URL = "sqlite:///./testdb.db"
 
-
+"""Connect to databse for simulation test"""
 engine = create_engine(
     SQLALCHEMY_DATEBASE_URL,
     connect_args={"check_same_thread": False},
